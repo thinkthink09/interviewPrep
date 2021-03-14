@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<script>
+  let arr = [7, 9, 10, 8, 6, 3, 2, 4, 5, 1]
+
+
+  /**
+   * Checked bubble sort so only run once if the array was already sorted
+   */
+  let bubbleSort1 = (arr) => {
+    let newArr = [...arr]
+    let sorted = true
+    do {
+      sorted = true
+      for(let i = 0; i < newArr.length - 1; i++) {
+        if(newArr[i] > newArr[i+1]) {
+          //swap
+          let swap = newArr[i]
+          newArr[i] = newArr[i+1]
+          newArr[i+1] = swap
+          sorted = false
+        }
+      }
+    } while(!sorted)
+    return newArr
+  }
+
+  /**
+   * minimum bubble sort not only checks sorted, but also avoid already sorted part of the array
+   */
+  let bubbleSort2 = (arr) => {
+    let newArr = [...arr]
+    let sorted = true
+    for(let i = 0; i < newArr.length; i++) {
+      sorted = true
+      for(let j = 0; j < newArr.length - i; j++) {
+        if(newArr[j] > newArr[j+1]) {
+          //swap
+          let swap = newArr[j]
+          newArr[j] = newArr[j+1]
+          newArr[j+1] = swap
+          sorted = false
+        }
+      }
+      if(sorted) break
+    }
+    return newArr
+  }
+
+  console.log('original:', arr);
+
+  console.log('check sorted:', bubbleSort1(arr));
+
+  console.log('minimum sorted:', bubbleSort2(arr));
+</script>
