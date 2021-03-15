@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<h1>permutations (distinct elements)</h1>
+<pre>
+  Recursive:
+  1, [2, 3]
+    1, 2 [3]
+    1, 3 [2]
+  2, [1, 3]
+    2, 1 [3]
+    2, 3 [1]
+  3, [1, 2]
+    3, 1 [2]
+    3, 2 [1]
+</pre>
+<pre>
+  Loop:
+  1
+    [1]
+    ^ ^
+    2
+      [2, 1]
+      ^  ^ ^
+      [1, 2]
+      ^  ^ ^
+      3
+        [3, 2, 1]
+        [2, 3, 1]
+        [2, 1, 3]
+
+        [3, 1, 2]
+        [1, 3, 2]
+        [1, 2, 3]
+</pre>
+
+<h1>permutations II (with duplicate elements)</h1>
+
+<pre>
+  [1, 1, 2]
+
+  Recursive:
+  1: 2, 2: 1
+    [1] 1: 1, 2: 1
+      [1, 1] 1: 0, 2: 1
+        [1, 1, 2] 1: 0, 2: 0
+      [1, 2] 1: 1, 2: 0
+        [1, 2, 1] 1: 0, 2: 0
+    [2] 1: 2, 2: 0
+      [2, 1] 1: 1, 2: 0
+        [2, 1, 1] 1: 0, 2: 0
+
+</pre>
+
+<script>
+  let arr = [1, 2, 3]
+  let permutationsRecurrsive = (list) => {
+    let rs = []
+
+    let recursive = (curr, remaining) => {
+      if (!remaining.length) {
+        return rs.push(curr)
+      }
+      remaining.forEach((num, index) => {
+        let removed = [...remaining]
+        removed.splice(index, 1)
+        //splice returns the poped element(s), so cannot inline splice
+        recursive(curr.concat([num]), removed)
+        //push returns the new length of the array, so use concat
+      })
+    }
+
+    recursive([], list)
+
+    return rs
+  }
+
+  let permutationsLoop = (list) => {
+    let rs = []
+
+    list.forEach(num => {
+      if(!rs.length) {
+        rs.push([num])
+      } else {
+        let newRs = []
+        rs.forEach(curr => {
+          for(let i = 0; i <= curr.length; i++) {
+            // need to <= curr.length because we need to insert at the end as well
+            let newR = [...curr]
+            newR.splice(i, 0, num)
+            newRs.push(newR)
+          }
+        })
+        rs = newRs
+      }
+      //console.log(rs)
+    });
+
+    return rs;
+  }
+
+  console.log(permutationsRecurrsive(arr));
+  console.log(permutationsLoop(arr));
+
+  let arr2 = [1, 1, 2]
+  let permutations2 = (list) => {
+    let remaining = {}
+
+    list.forEach(num => {
+      if(!remaining[num]) {
+        remaining[num] = 1
+      } else {
+        remaining[num]++
+      }
+    })
+
+    console.log(remaining)
+    console.log(Object.keys(remaining))
+
+    let rs = []
+
+    let recursive = (curr, remaining) => {
+      //if (Object.values(remaining).reduce((a, b) => a + b) === 0) {
+      // if no remaining, or better: if curr.length is the same as input
+      if (curr.length === list.length) {
+        return rs.push(curr)
+      }
+
+      Object.keys(remaining).forEach(num => {
+        if(remaining[num] > 0) {
+          remaining[num]--
+          recursive(curr.concat([parseInt(num)]), remaining)
+          remaining[num]++
+        }
+      })
+    }
+
+    recursive([], remaining)
+
+    return rs
+  }
+
+  console.log(permutations2(arr2));
+</script>
