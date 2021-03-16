@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<h1>Excel Column Name Translator</h1>
+<pre>
+translate
+0 -> A
+1 -> B
+...
+25 -> Z
+26 -> AA
+27 -> AB
+...
+
+and vice versa
+
+</pre>
+
+<script>
+let numericToAlpha = num => {
+  const alphaArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+  let alpha = ''
+
+  while(num >= 0) {
+    alpha = alphaArray[num%26] + alpha
+    num = Math.floor(num /= 26) - 1
+  }
+  return alpha
+}
+
+let alphaToNumeric = alpha => {
+  let num = 0
+
+  for(let i = 0; i < alpha.length; i++) {
+    num += (alpha.charCodeAt(i) - 65 + 1) * Math.pow(26, alpha.length - i - 1)
+  }
+  return num - 1
+}
+
+for(let i = 0; i < 100; i++){
+  console.log(i, numericToAlpha(i), alphaToNumeric(numericToAlpha(i)))
+}
+
+</script>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<h1>Decode Ways</h1>
+<pre>
+1 = A
+2 = B
+...
+26 = Z
+
+11106
+could mean
+"AAJF" with the grouping (1 1 10 6)
+"KJF" with the grouping (11 10 6)
+
+Given a string s containing only digits, return the number of ways to decode it.
+
+213478914320
+           0
+          1
+         0
+        1
+       1
+      1
+
+0 => ways = 0
+<26 => 2
+>26 => 1
+
+</pre>
+
+
+<script>
+
+/**
+ * new submission using O(1) memory and somehow is also tiny bit faster despite the copying from oneApart to twoApart
+ */
+let decodeWays = str => {
+  if(!str) {
+      return 0;
+  }
+  let twoApart = (str[str.length-1] !== '0') + 0
+  if(str.length <= 1) {
+    return twoApart
+  }
+  let oneApart = str[str.length-2] === '0' ? 0 : (parseInt(str[str.length-2])*10+parseInt(str[str.length-1]) <= 26) + twoApart
+  if(str.length === 2) {
+    return oneApart
+  }
+  let ways = str[str.length-3] === '0' ? 0 : (parseInt(str[str.length-3])*10+parseInt(str[str.length-2]) <= 26) * twoApart + oneApart
+  for(let i = str.length - 4; i >= 0; i--) {
+    twoApart = oneApart
+    oneApart = ways
+    ways = str[i] === '0' ? 0 : (parseInt(str[i])*10+parseInt(str[i+1]) <= 26) * twoApart + oneApart
+  }
+  return ways
+}
+
+console.log(decodeWays("12"), 2)
+console.log(decodeWays("226"), 3)
+console.log(decodeWays("230"), 0)
+console.log(decodeWays("11106"), 2)
+console.log(decodeWays("213478914320"), 6)
+console.log(decodeWays("31019232012391202"), 12)
+
+/**
+ * leetcode submission long ago
+ */
+var numDecodings = function(s) {
+    if(!s) {
+        return 0;
+    }
+
+    let memo = [];
+    memo[s.length] = 1;
+    memo[s.length - 1] = s[s.length - 1] == '0'? 0 : 1;
+
+    for(let i = s.length-2; i >= 0; i--) {
+        if(s[i] == '0') {
+            memo[i] = 0;
+        } else if(parseInt(s[i])*10+parseInt(s[i+1]) > 26) {
+            memo[i] = memo[i+1];
+        }else {
+            memo[i] = memo[i+1]+memo[i+2]
+        }
+    }
+    return memo[0];
+};
+
+</script>
