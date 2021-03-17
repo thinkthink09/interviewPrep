@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<h1>Patching Array</h1>
+<pre>
+Example 1:
+
+Input: nums = [1,3], n = 6
+Output: 1
+Explanation:
+Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4.
+Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3].
+Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6].
+So we only need 1 patch.
+Example 2:
+
+Input: nums = [1,5,10], n = 20
+Output: 2
+Explanation: The two patches can be [2, 4].
+Example 3:
+
+Input: nums = [1,2,2], n = 5
+Output: 0
+</pre>
+
+<script>
+
+var minPatches = function(nums, n) {
+  let patches = 0
+
+  for (let i = 1; i <= n; i++) {
+    let position = canBeSummedTo(nums, i)
+    if(position >= 0) {
+      nums.splice(position, 0, i)
+      patches++
+    }
+  }
+
+  return patches
+};
+
+let canBeSummedTo = (nums, n) => {
+  let check = n
+  let position = 0;
+  for (let i = nums.length - 1; i >= 0 && check > 0; i--) {
+    if(nums[i] <= check) {
+      if(!position) {
+        position = i
+      }
+      check -= nums[i]
+    }
+  }
+  return check === 0 ? -1 : position + 1
+}
+
+console.log(minPatches([1,3], 6), 1)
+console.log(minPatches([1,5,10], 20), 2)
+console.log(minPatches([1,2,2], 5), 0)
+console.log(minPatches([1,22,32], 9005), 11)
+
+/**
+ * someone else's solution
+ */
+ minPatches = function(nums, n) {
+  let covered = 0;
+  let result = 0;
+
+  for(let i = 0; i < nums.length; i++){
+    if(covered >= n) {
+      return result;
+    }
+
+    if(nums[i] > covered+1) {
+      result++;
+      covered = covered*2+1;
+      i--;
+    } else{
+      covered += nums[i];
+    }
+  }
+
+  if(covered >= n){
+    return result;
+  } else {
+
+    while(covered < n){
+      covered = covered*2+1;
+      result++;
+    }
+  }
+
+  return result;
+};
+
+</script>

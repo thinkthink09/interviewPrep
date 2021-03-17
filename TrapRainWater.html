@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<h1>Trapping Rain Water</h1>
+<pre>
+[0,1,0,2,1,0,1,3,2,1,2,1]
+ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+ 0 0 1 0 1 2 1 0 0 1 0 0
+
+= 6
+
+</pre>
+
+
+<script>
+
+let trapRain = height => {
+
+  let rs = 0
+
+  let rightHeight = []
+  rightHeight[height.length - 1] = height[height.length - 1]
+  for (let i = height.length - 2; i >= 1; i--) {
+    rightHeight[i] = Math.max(rightHeight[i+1], height[i])
+  }
+
+  let leftHeight = [height[0]]
+  for (let i = 1; i< height.length - 1; i++) {
+    let water = Math.min(leftHeight[i-1], rightHeight[i]) - height[i]
+    if(water > 0) rs += water
+    leftHeight[i] = Math.max(leftHeight[i-1], height[i])
+  }
+
+  return rs
+};
+
+console.log(trapRain([0,1,0,2,1,0,1,3,2,1,2,1]), 6)
+console.log(trapRain([4,2,0,3,2,5]), 9)
+
+/**
+ * time: O(n) space: O(1) solution
+ */
+trapRain = height => {
+    let total = 0;
+    let lMax = 0;
+    let rMax = 0;
+    let l = 0;
+    let r = height.length - 1;
+
+    while(l < r) {
+        lMax = Math.max(lMax, height[l]);
+        rMax = Math.max(rMax, height[r]);
+
+        if(height[l] < height[r]) {
+            if(height[l] < lMax) total += lMax - height[l];
+            l++;
+        } else {
+            if(height[r] < rMax) total += rMax - height[r];
+            r--;
+        }
+
+    }
+
+    return total;
+};
+</script>
