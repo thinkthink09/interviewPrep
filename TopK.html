@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<h1>Top K</h1>
+<pre>
+
+
+</pre>
+
+
+<script>
+var topKFrequent = function(nums, k) {
+  let counter = {};
+  for (let num of nums) {
+    if (counter[num]) counter[num] += 1
+    else counter[num] = 1
+  }
+  // for definite O(nlog(n))
+  // return Object.keys(counter).sort((A,B) => counter[B] - counter[A]).slice(0,k).map(item => parseInt(item))
+
+  // for if k is small, smaller than log(n)
+  let rs = []
+
+  for (let key of Object.keys(counter)) {
+    let added = false
+    for (let i = 0; i < k && i < rs.length; i++) {
+      if(rs.length>i && counter[key] > counter[rs[i]]) {
+        rs.splice(i, 0, parseInt(key))
+        if(rs.length > k) {
+          rs.splice(k, 1)
+        }
+        added = true
+        break
+      }
+    }
+
+    if(rs.length < k && !added) {
+      rs.splice(rs.length, 0, parseInt(key))
+    }
+  }
+  return rs
+}
+
+console.log(topKFrequent([1,1,1,2,2,3], 2), [1,2])
+console.log(topKFrequent([1,1,1,7,0,0,0,8,0,0,0,0,8,8,8,8,8,8,8,2,2,3], 2), [8, 0])
+console.log(topKFrequent([-1,1,4,-4,3,5,4,-2,3,-1], 3), [-1,3,4])
+console.log(topKFrequent([2,3,4,1,4,0,4,-1,-2,-1], 2), [4,-1])
+
+</script>
