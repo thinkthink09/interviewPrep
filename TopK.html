@@ -19,11 +19,11 @@ var topKFrequent = function(nums, k) {
   // for if k is small, smaller than log(n)
   let rs = []
 
-  for (let key of Object.keys(counter)) {
+  for (let key of Object.keys(counter)) { // for every key
     let added = false
-    for (let i = 0; i < k && i < rs.length; i++) {
-      if(rs.length>i && counter[key] > counter[rs[i]]) {
-        rs.splice(i, 0, parseInt(key))
+    for (let i = 0; i < rs.length; i++) { // look at everything in rs
+      if(counter[key] > counter[rs[i]]) { // if the key has larger count
+        rs.splice(i, 0, parseInt(key)) // add the key into rs
         if(rs.length > k) {
           rs.splice(k, 1)
         }
@@ -32,7 +32,7 @@ var topKFrequent = function(nums, k) {
       }
     }
 
-    if(rs.length < k && !added) {
+    if(rs.length < k&& !added) { // if rs is not full, we append to last since this key has no bigger count than any other
       rs.splice(rs.length, 0, parseInt(key))
     }
   }
@@ -41,7 +41,7 @@ var topKFrequent = function(nums, k) {
 
 console.log(topKFrequent([1,1,1,2,2,3], 2), [1,2])
 console.log(topKFrequent([1,1,1,7,0,0,0,8,0,0,0,0,8,8,8,8,8,8,8,2,2,3], 2), [8, 0])
-console.log(topKFrequent([-1,1,4,-4,3,5,4,-2,3,-1], 3), [-1,3,4])
+console.log(topKFrequent([-1,1,4,-4,3,-1,5,4,-2,3,-1], 3), [-1,3,4])
 console.log(topKFrequent([2,3,4,1,4,0,4,-1,-2,-1], 2), [4,-1])
 
 </script>
